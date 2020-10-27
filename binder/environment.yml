@@ -2,8 +2,16 @@ name: xtrude
 channels:
   - conda-forge
 dependencies:
-  - requests
+  - requests =2.22
   - tqdm
   - matplotlib
-  - rioxarray
-  - xtrude
+  - jupyter-server-proxy >=1.5
+  - ipyspin >=0.1.2
+  - rioxarray >=0.1
+  - aiohttp >=3
+  - aiohttp-cors >=0.7
+  - pydeck >=0.5
+  - mercantile >=1
+  - affine >=2
+  - pillow >=7
+  - pip

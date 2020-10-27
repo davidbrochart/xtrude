@@ -38,6 +38,8 @@ class TerrainMap(HasTraits):
              vmin=None,
              vmax=None,
              surface_url=None,
+             surface_port=None,
+             terrain_port=None,
              debug_output=None):
         """Display a DEM array as a 3D interactive map.
 
@@ -53,6 +55,8 @@ class TerrainMap(HasTraits):
             self.debug_output = debug_output
 
         with self.debug_output:
+            self.terrain_port = terrain_port or 8080
+            self.surface_port = surface_port or 8081
             self.s = ipyspin.Spinner()
             self.window_url = ''
             asyncio.ensure_future(self.async_wait_for_window_url())
@@ -98,27 +102,23 @@ class TerrainMap(HasTraits):
         with self.debug_output:
             if self.window_url.endswith('/lab'):
                 # we are in JupyterLab
-                self.base_url = self.window_url[:-4]
+                base_url = self.window_url[:-4]
             else:
                 if '/notebooks/' in self.window_url:
                     # we are in classical Notebook
                     i = self.window_url.rfind('/notebooks/')
-                    self.base_url = self.window_url[:i]
+                    base_url = self.window_url[:i]
                 elif '/voila/' in self.window_url:
                     # we are in Voila
                     i = self.window_url.rfind('/voila/')
-                    self.base_url = self.window_url[:i]
-            if ':' in self.base_url:
-                self.base_url = self.base_url[:self.base_url.rfind(':')]
-            self.host = self.base_url[7:]  # remove http://
-            self.start_server(8080, self.terrain_handler)
+                    base_url = self.window_url[:i]
+            self.start_server(self.terrain_port, self.terrain_handler)
             if self.colormap is None:
                 surface_url = self.surface_url
             else:
-                self.start_server(8081, self.surface_handler)
-                surface_url = self.base_url + ':8081/{z}/{x}/{y}.png'
-
-            terrain_url = self.base_url + ':8080/{z}/{x}/{y}.png'
+                self.start_server(self.surface_port, self.surface_handler)
+                surface_url = f'{base_url}/proxy/127.0.0.1:{self.surface_port}' + '/{z}/{x}/{y}.png'
+            terrain_url = f'{base_url}/proxy/127.0.0.1:{self.terrain_port}' + '/{z}/{x}/{y}.png'
             elevation_decoder= {"rScaler": 65536 / self.factor, "gScaler": 256 / self.factor, "bScaler": 1 / self.factor, "offset": -self.offset}
 
             self.l.elevation_decoder = elevation_decoder
@@ -167,10 +167,10 @@ class TerrainMap(HasTraits):
         app = web.Application()
 
         cors = aiohttp_cors.setup(app)
-        resource = cors.add(app.router.add_resource("/{z}/{x}/{y}.png"))
+        resource = cors.add(app.router.add_resource('/{z}/{x}/{y}.png'))
         cors.add(resource.add_route("GET", handler), {"*": aiohttp_cors.ResourceOptions(expose_headers="*", allow_headers="*")})
 
-        asyncio.ensure_future(web._run_app(app, host=self.host, port=port))
+        asyncio.ensure_future(web._run_app(app, host='127.0.0.1', port=port))
 
 
     def get_tile(self, x, y, z):

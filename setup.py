@@ -1,12 +1,14 @@
 from setuptools import setup, find_packages
 
 requirements = [
+    'jupyter-server-proxy>=1.5',
     'ipyspin>=0.1.2',
-    'xarray>=0.16',
-    'aiohttp>=3.7',
+    'rioxarray>=0.1',
+    'aiohttp>=3',
     'aiohttp-cors>=0.7',
     'pydeck>=0.5',
     'mercantile>=1',
+    'affine>=2',
     'pillow>=7'
 ]
 

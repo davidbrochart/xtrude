@@ -1,2 +1,8 @@
 jupyter nbextension install --sys-prefix --symlink --overwrite --py pydeck
 jupyter nbextension enable --sys-prefix --py pydeck
+
+jupyter serverextension enable --sys-prefix jupyter_server_proxy
+
+export GDAL_DATA=`gdal-config --datadir`
+
+pip install git+https://github.com/davidbrochart/xtrude --no-deps
