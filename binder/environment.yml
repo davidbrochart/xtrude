@@ -1,0 +1,9 @@
+name: xtrude
+channels:
+  - conda-forge
+dependencies:
+  - requests
+  - tqdm
+  - matplotlib
+  - rioxarray
+  - xtrude
