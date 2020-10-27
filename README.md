@@ -1,4 +1,4 @@
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/davidbrochart/xtrude/master?filepath=examples%2Fintroduction.ipynb)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/davidbrochart/xtrude/main?filepath=examples%2Fintroduction.ipynb)
 
 # xtrude: an xarray extension for 3D terrain visualization
 
