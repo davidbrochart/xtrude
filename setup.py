@@ -38,6 +38,6 @@ setup(
     setup_requires=[],
     tests_require=[],
     url='https://github.com/davidbrochart/xtrude',
-    version='0.1.1',
+    version='0.1.2',
     zip_safe=False
 )
